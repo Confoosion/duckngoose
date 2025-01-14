@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DuckMovement : MonoBehaviour
-{
+public class GooseMovement : MonoBehaviour
+{   
     // Follow Mechanic
-    [SerializeField] bool isFollowing = false;
+    [SerializeField] bool isFollowing = true;
     [SerializeField] Transform followPartner;
 
     private float horizontal;
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private float jumpingPower = 11f;
+    [SerializeField] private float speed = 3f;
+    [SerializeField] private float jumpingPower = 10f;
     private bool isFacingRight = true;
 
     [SerializeField] private Rigidbody2D rb;
@@ -21,21 +21,15 @@ public class DuckMovement : MonoBehaviour
     [SerializeField] private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
 
-    // Double jump
-    private int MAXJUMPS = 1;
-    private int jumpCount = 0;
-
-
+    // Update is called once per frame
     void Update()
     {
         if(!isFollowing)
         {
             horizontal = Input.GetAxisRaw("Horizontal");
-            Debug.Log(horizontal);
 
             if (IsGrounded())
             {
-                jumpCount = 0;
                 coyoteTimeCounter = coyoteTime;
             }
             else
@@ -44,9 +38,8 @@ public class DuckMovement : MonoBehaviour
             }
 
             // Jump logic with coyote time
-            if (Input.GetButtonDown("Jump") && (coyoteTimeCounter > 0f || jumpCount < MAXJUMPS))
+            if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f)
             {
-                jumpCount++;
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
                 coyoteTimeCounter = 0f; // Reset coyote time after jump
             }
@@ -79,7 +72,7 @@ public class DuckMovement : MonoBehaviour
 
     private void Flip()
     {
-        if (isFacingRight && horizontal > 0f || !isFacingRight && horizontal < 0f)
+        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
             isFacingRight = !isFacingRight;
             Vector3 localScale = transform.localScale;
