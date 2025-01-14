@@ -5,8 +5,8 @@ using UnityEngine;
 public class DuckMovement : MonoBehaviour
 {
     private float horizontal;
-    [SerializeField] private float speed = 8f;
-    [SerializeField] private float jumpingPower = 16f;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float jumpingPower = 11f;
     private bool isFacingRight = true;
 
     [SerializeField] private Rigidbody2D rb;
