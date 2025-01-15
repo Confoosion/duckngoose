@@ -7,6 +7,7 @@ public class GooseMovement : MonoBehaviour
     // Follow Mechanic
     [SerializeField] bool isFollowing = true;
     [SerializeField] Transform followPartner;
+    [SerializeField] float followDistance = 1.5f;
 
     private float horizontal;
     [SerializeField] private float speed = 3f;
@@ -86,13 +87,13 @@ public class GooseMovement : MonoBehaviour
         float distance = followPartner.position.x - transform.position.x;
         // Debug.Log(distance);
 
-        if(distance < -1f)
+        if(distance < -followDistance)
         {
             // Follow Left
             horizontal = -1f;
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
         }
-        else if(distance > 1f)
+        else if(distance > followDistance)
         {
             // Follow Right
             horizontal = 1f;

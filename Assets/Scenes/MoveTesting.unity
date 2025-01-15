@@ -265,7 +265,7 @@ GameObject:
   - component: {fileID: 375785934}
   - component: {fileID: 375785936}
   - component: {fileID: 375785935}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DUCK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,6 +354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFollowing: 0
   followPartner: {fileID: 1524259533}
+  followDistance: 1.5
   speed: 5
   jumpingPower: 11
   rb: {fileID: 375785936}
@@ -405,7 +406,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.2}
+  m_Size: {x: 0.19, y: 0.2}
   m_EdgeRadius: 0
 --- !u!50 &375785936
 Rigidbody2D:
@@ -703,7 +704,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 726364720}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -734,7 +735,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 971525530}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -966,7 +967,7 @@ GameObject:
   - component: {fileID: 1524259535}
   - component: {fileID: 1524259537}
   - component: {fileID: 1524259536}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GOOSE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1055,6 +1056,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFollowing: 1
   followPartner: {fileID: 375785932}
+  followDistance: 1.5
   speed: 3
   jumpingPower: 10
   rb: {fileID: 1524259537}
@@ -1078,7 +1080,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
