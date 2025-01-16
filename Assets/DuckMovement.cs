@@ -15,6 +15,9 @@ public class DuckMovement : MonoBehaviour
     private bool isFacingRight = true;
 
     [SerializeField] private Rigidbody2D rb;
+
+    // Ground Checking
+    private Vector2 groundCheck_box_vector = new Vector2(0.69f, 0.1f);
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
 
@@ -27,6 +30,8 @@ public class DuckMovement : MonoBehaviour
     private int jumpCount = 0;
 
     // Wall Jump
+    private Vector2 wallJump_box_vector = new Vector2(0.2f, 0.725f);
+    private Vector2 wallJump_box_offsets = new Vector2(0.3f, 0f);
     private bool wallJumpLock = false;
     private float WALLJUMPTIME = 0.1f;
     private float wallJumpTimer = 0f;
@@ -34,6 +39,7 @@ public class DuckMovement : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(IsWallTouching());
         if(!isFollowing)
         {
             if(!wallJumpLock)
@@ -96,20 +102,25 @@ public class DuckMovement : MonoBehaviour
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
         }
     }
-
+    
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.25f, groundLayer);
+        Vector2 boxSize = new Vector2(0.69f, 0.1f);
+        return Physics2D.OverlapBox(groundCheck.position, boxSize, 0f, groundLayer);
+        // return Physics2D.OverlapCircle(groundCheck.position, 0.25f, groundLayer);
     }
 
     private bool IsWallTouching()
     {
-        return Physics2D.OverlapCircle(new Vector2(transform.position.x + horizontal * 0.12f, transform.position.y), 0.35f, groundLayer);
+        Vector2 boxPosition = new Vector2(transform.position.x + horizontal * wallJump_box_offsets.x, transform.position.y - wallJump_box_offsets.y);
+
+        // Perform the overlap box check
+        return Physics2D.OverlapBox(boxPosition, wallJump_box_vector, 0f, groundLayer);
     }
 
     private void Flip()
     {
-        if (isFacingRight && horizontal > 0f || !isFacingRight && horizontal < 0f)
+        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
             isFacingRight = !isFacingRight;
             Vector3 localScale = transform.localScale;
@@ -149,9 +160,16 @@ public class DuckMovement : MonoBehaviour
     {
         if (groundCheck != null)
         {
+            // Ground Checking
+            // Gizmos.DrawWireSphere(groundCheck.position, 0.2f);
+            Vector2 boxSize = new Vector2(0.69f, 0.1f); // Same as in IsGrounded
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, 0.2f);
-            Gizmos.DrawWireSphere(new Vector2(transform.position.x + horizontal * 0.12f, transform.position.y), 0.35f);
+            Gizmos.DrawWireCube(groundCheck.position, boxSize);
+
+            // Wall Checking
+            Vector2 boxPosition = new Vector2(transform.position.x + horizontal * wallJump_box_offsets.x, transform.position.y);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(boxPosition, wallJump_box_vector);
         }
     }
 }

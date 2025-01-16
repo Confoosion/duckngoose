@@ -60,7 +60,7 @@ public class GooseMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!isFollowing)
+        if(!isFollowing && IsGrounded())
         {
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
         }
@@ -68,7 +68,9 @@ public class GooseMovement : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.25f, groundLayer);
+        Vector2 boxSize = new Vector2(0.69f, 0.1f);
+        return Physics2D.OverlapBox(groundCheck.position, boxSize, 0f, groundLayer);
+        // return Physics2D.OverlapCircle(groundCheck.position, 0.25f, groundLayer);
     }
 
     private void Flip()
@@ -105,8 +107,9 @@ public class GooseMovement : MonoBehaviour
     {
         if (groundCheck != null)
         {
+            Vector2 boxSize = new Vector2(0.75f, 0.1f); // Same as in IsGrounded
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, 0.2f);
+            Gizmos.DrawWireCube(groundCheck.position, boxSize);
         }
     }
 }
