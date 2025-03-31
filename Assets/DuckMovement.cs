@@ -2,28 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DuckMovement : MonoBehaviour
+public class DuckMovement : BaseMovement
 {
     // Follow Mechanic
     [SerializeField] bool isFollowing = false;
     [SerializeField] Transform followPartner;
     [SerializeField] float followDistance = 1.5f;
-
-    private float horizontal;
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private float jumpingPower = 11f;
-    private bool isFacingRight = true;
-
-    [SerializeField] private Rigidbody2D rb;
-
-    // Ground Checking
-    private Vector2 groundCheck_box_vector = new Vector2(0.69f, 0.1f);
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
-
-    // Coyote time variables
-    [SerializeField] private float coyoteTime = 0.2f;
-    private float coyoteTimeCounter;
 
     // Double Jump
     private int MAXJUMPS = 1;
@@ -36,10 +20,15 @@ public class DuckMovement : MonoBehaviour
     private float WALLJUMPTIME = 0.1f;
     private float wallJumpTimer = 0f;
 
+    void Awake()
+    {
+        // Setting variables for the BaseMovement inheriting
+        ReceiveVariables();
+    }
 
     void Update()
     {
-        Debug.Log(IsWallTouching());
+        // Debug.Log(IsWallTouching());
         if(!isFollowing)
         {
             if(!wallJumpLock)
@@ -102,13 +91,6 @@ public class DuckMovement : MonoBehaviour
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
         }
     }
-    
-    private bool IsGrounded()
-    {
-        Vector2 boxSize = new Vector2(0.69f, 0.1f);
-        return Physics2D.OverlapBox(groundCheck.position, boxSize, 0f, groundLayer);
-        // return Physics2D.OverlapCircle(groundCheck.position, 0.25f, groundLayer);
-    }
 
     private bool IsWallTouching()
     {
@@ -116,17 +98,6 @@ public class DuckMovement : MonoBehaviour
 
         // Perform the overlap box check
         return Physics2D.OverlapBox(boxPosition, wallJump_box_vector, 0f, groundLayer);
-    }
-
-    private void Flip()
-    {
-        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
-        {
-            isFacingRight = !isFacingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
-        }
     }
 
     private void WallJump()
