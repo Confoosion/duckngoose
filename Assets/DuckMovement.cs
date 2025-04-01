@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class DuckMovement : BaseMovement
 {
-    // Follow Mechanic
-    [SerializeField] bool isFollowing = false;
-    [SerializeField] Transform followPartner;
-    [SerializeField] float followDistance = 1.5f;
-
     // Double Jump
     private int MAXJUMPS = 1;
     private int jumpCount = 0;
@@ -29,56 +24,49 @@ public class DuckMovement : BaseMovement
     void Update()
     {
         // Debug.Log(IsWallTouching());
-        if(!isFollowing)
+        if(!wallJumpLock)
         {
-            if(!wallJumpLock)
-            {
-                horizontal = Input.GetAxisRaw("Horizontal");
-            }
+            ReceiveInput();
+        }
 
-            if (IsGrounded())
-            {
-                jumpCount = 0;
-                coyoteTimeCounter = coyoteTime;
-            }
-            else
-            {
-                coyoteTimeCounter -= Time.deltaTime;
-            }
-
-            if(wallJumpTimer > 0f)
-            {
-                wallJumpTimer -= Time.deltaTime;
-            }
-            else
-            {
-                wallJumpLock = false;
-            }
-
-            // Wall Jump logic
-            if(Input.GetButtonDown("Jump") && rb.velocity.x == 0f && !IsGrounded() && IsWallTouching())
-            {
-                // Debug.Log("Wall Jump");
-                WallJump();
-            }
-
-            // Normal Jump logic with coyote time
-            else if (Input.GetButtonDown("Jump") && (coyoteTimeCounter > 0f || jumpCount < MAXJUMPS) && !IsWallTouching())
-            {
-                jumpCount++;
-                rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
-                coyoteTimeCounter = 0f; // Reset coyote time after jump
-            }
-
-            // Jump cut logic (Variable jumps)
-            if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-            }
+        if (IsGrounded())
+        {
+            jumpCount = 0;
+            coyoteTimeCounter = coyoteTime;
         }
         else
         {
-            Follow();
+            coyoteTimeCounter -= Time.deltaTime;
+        }
+
+        if(wallJumpTimer > 0f)
+        {
+            wallJumpTimer -= Time.deltaTime;
+        }
+        else
+        {
+            wallJumpLock = false;
+        }
+
+        // Wall Jump logic
+        if(Input.GetButtonDown("Jump") && rb.velocity.x == 0f && !IsGrounded() && IsWallTouching())
+        {
+            // Debug.Log("Wall Jump");
+            WallJump();
+        }
+
+        // Normal Jump logic with coyote time
+        else if (Input.GetButtonDown("Jump") && (coyoteTimeCounter > 0f || jumpCount < MAXJUMPS) && !IsWallTouching())
+        {
+            jumpCount++;
+            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            coyoteTimeCounter = 0f; // Reset coyote time after jump
+        }
+
+        // Jump cut logic (Variable jumps)
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
         Flip();
         // Debug.Log(rb.velocity);
@@ -86,9 +74,9 @@ public class DuckMovement : BaseMovement
 
     private void FixedUpdate()
     {
-        if(!isFollowing && !wallJumpLock)
+        if(!wallJumpLock)
         {
-            rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+            PlayerMove();
         }
     }
 
@@ -106,25 +94,6 @@ public class DuckMovement : BaseMovement
         rb.velocity = new Vector2(horizontal * -1f * speed, jumpingPower);
         wallJumpLock = true;
         wallJumpTimer = WALLJUMPTIME;
-    }
-
-    private void Follow()
-    {
-        float distance = followPartner.position.x - transform.position.x;
-        // Debug.Log(distance);
-
-        if(distance < -followDistance)
-        {
-            // Follow Left
-            horizontal = -1f;
-            rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
-        }
-        else if(distance > followDistance)
-        {
-            // Follow Right
-            horizontal = 1f;
-            rb.velocity = new Vector2(speed, rb.velocity.y);
-        }
     }
 
     void OnDrawGizmos()

@@ -21,6 +21,10 @@ public class BaseMovement : MonoBehaviour
     protected float coyoteTime = 0.2f;
     protected float coyoteTimeCounter;
 
+    // Switching Variables
+
+
+
     // RECEIVING VARIABLES
     public void ReceiveVariables()
     {
@@ -33,6 +37,10 @@ public class BaseMovement : MonoBehaviour
     public virtual void ReceiveInput()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
+        if(SwapCheck())
+        {
+            POVSwapping.Swapping.SwapCharacter();
+        }
     }
 
     // PLAYER MOVEMENT
@@ -58,5 +66,14 @@ public class BaseMovement : MonoBehaviour
     {
         Vector2 boxSize = new Vector2(0.69f, 0.1f);
         return Physics2D.OverlapBox(groundCheck.position, boxSize, 0f, groundLayer);
+    }
+
+    public bool SwapCheck()
+    {
+        if(Input.GetKeyDown(KeyCode.C) && IsGrounded())
+        {
+            return(true);
+        }
+        return(false);
     }
 }
