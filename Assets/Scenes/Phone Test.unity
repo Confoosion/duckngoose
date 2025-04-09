@@ -4629,7 +4629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1de320669ab4bfe9d566c8e81b9e63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  phoneUI: {fileID: 0}
+  phoneUI: {fileID: 1940861162}
 --- !u!114 &1488035354
 MonoBehaviour:
   m_ObjectHideFlags: 0
